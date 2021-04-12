@@ -1,0 +1,14 @@
+creationTime = current_time;
+myMessage = "unset message";
+lifeTime_full = 13;  // seconds
+lifeTime = lifeTime_full;
+myFont = fnt_debug;
+myColor = c_white;
+shadow_offset = {x: 1, y: 1};
+shadow_color = c_black;
+shadow_alpha = 0.6;
+myHa = fa_left;
+myVa = fa_top;
+killKey = ord("X");
+mWidth = 0;
+mHeight = 0;

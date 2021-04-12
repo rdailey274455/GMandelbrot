@@ -1,0 +1,102 @@
+renderWidth = room_width;
+renderHeight = room_height;
+renderSurf = surface_create(renderWidth, renderHeight);
+maxIters = 35;
+
+//liveUpdate = true;
+
+time_start = -1;
+time_finish = -1;
+
+//colors =
+	//{
+	//hue_bounded_min:128,
+	//hue_bounded_bandwidth:127,
+	//hue_unbounded_min:0,
+	//hue_unbounded_bandwidth:127,
+	//sat_bounded:127,
+	//val_bounded:255,
+	//sat_unbounded:47,
+	//val_unbounded:47
+	//}
+
+colors_bounded = array_create(10);
+for (var ib = 0; ib < array_length(colors_bounded); ++ib)
+	{
+	colors_bounded[ib] = make_colour_hsv(255*(ib/array_length(colors_bounded)), 222, 222);
+	}
+
+colors_unbounded = array_create(maxIters);
+for (var iu = 0; iu < array_length(colors_unbounded); ++iu)
+	{
+	colors_unbounded[iu] = make_colour_hsv(255*(iu/array_length(colors_unbounded)), 77, 77);
+	}
+
+
+render = function()
+	{
+	show_message("Starting rendering!");
+	time_start = current_time;
+	//var preTarget = surface_get_target();
+	if (!surface_exists(renderSurf)) { surface_create(renderWidth, renderHeight); }
+	surface_set_target(renderSurf);
+	var sw = surface_get_width(renderSurf);
+	var sh = surface_get_height(renderSurf);
+	var rrx = new RadRange(-2.0, 1.0, sw);
+	var rry = new RadRange(1.5, -1.5, sh);
+	var m = undefined;
+	var c = new ComplexNum(0.0, 0.0);
+	var pxlCol = undefined;
+	for (var sy = 0; sy < sh; ++sy)
+		{
+		if (!rry.active()) { break; }
+		for (var sx = 0; sx < sw; ++sx)
+			{
+			if (!rrx.active()) { break; }
+			//show_debug_message("------------ NEW PIXEL! ------------");
+			c.assign(rrx.currentValue(), rry.currentValue());
+			//c.__a = rrx.__value;
+			//c.__b = rry.__value;
+			m = mandelbrot(c, maxIters);
+			if (m[0] == "bounded")
+				{
+				pxlCol = colors_bounded[floor(frac(abs(m[1]))*10)];
+				//pxlCol = c_white;
+				//pxlCol = make_colour_hsv(
+					//colors.hue_bounded_min + colors.hue_bounded_bandwidth*frac(abs(m[1])),  // bounded means smallish number, so what's interesting is the decimal places
+					//colors.sat_bounded, colors.val_bounded);
+				}
+			else if (is_nan(m[0]) || is_undefined(m[0]) || is_infinity(m[0]))
+				{
+				pxlCol = colors_unbounded[m[1]];
+				//pxlCol = c_blue;
+				//pxlCol = make_colour_hsv(
+					//colors.hue_unbounded_min + colors.hue_unbounded_bandwidth*(abs(m[1]) mod colors.hue_unbounded_bandwidth), // unbounded means big number, so map it to hue band
+					//colors.sat_unbounded, colors.val_unbounded);  //c_white;  //$0b072f;
+				}
+			else
+				{
+				pxlCol = c_black;
+				}
+			draw_point_colour(sx, sy, pxlCol);
+			//if (liveUpdate)
+				//{
+				//surface_reset_target();
+				//draw_surface(renderSurf, x, y);
+				//surface_set_target(renderSurf);
+				//}
+			rrx.step();
+			}
+		show_debug_message("Line " + string(sy) + " complete");
+		rrx.restart();
+		rry.step();
+		}
+	delete rrx;
+	delete rry;
+	//delete c;
+	surface_reset_target();
+	//surface_set_target(preTarget);
+	time_finish = current_time;
+	show_message("Finished rendering!\nResolution (px): " + string(sw) + " by " + string(sh) +
+		"\nElapsed time: " + string_format((time_finish - time_start)/1000, 4, 6) + " seconds");
+	}

@@ -1,0 +1,19 @@
+// STEP EVENT
+if (keyboard_check_pressed(ord("E")))
+	{
+	var a = real(get_string("a = ", "0.0"));
+	var b = real(get_string("b = ", "0.0"));
+	var iters = real(string_digits(get_string("iterations = ","1000")));
+	var c = new ComplexNum(a, b);
+	var m = mandelbrot(c, iters);
+	show_message("mandelbrot() = [" + string(m[0]) + ", " + string_format(m[1], 8, 16) + "]");
+	delete c;
+	}
+
+
+
+// DRAW EVENT
+if (keyboard_check_pressed(ord("R"))) { render(); }
+
+if (!surface_exists(renderSurf)) { renderSurf = surface_create(renderWidth, renderHeight); }
+draw_surface(renderSurf, x, y);

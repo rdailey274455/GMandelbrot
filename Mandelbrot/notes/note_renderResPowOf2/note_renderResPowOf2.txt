@@ -1,0 +1,16 @@
+//renderWidth = 2;
+//while (renderWidth <= room_width) { renderWidth *= renderWidth; }
+//renderHeight = 2;
+//while (renderHeight <= room_height) { renderHeight *= renderHeight; }
+renderWidth = 0;
+var pow = 0;
+while (renderWidth <= room_width)
+	{
+	renderWidth = power(2, pow++);
+	}
+renderHeight = 0;
+pow = 0;
+while (renderHeight <= room_height)
+	{
+	renderHeight = power(2, pow++);
+	}
