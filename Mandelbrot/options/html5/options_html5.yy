@@ -2,7 +2,7 @@
   "option_html5_browser_title": "GMendelbrot",
   "option_html5_version": "1.0.0.0",
   "option_html5_foldername": "GMendelbrot_files",
-  "option_html5_outputname": "GMendelbrot_index.html",
+  "option_html5_outputname": "index.html",
   "option_html5_splash_png": "${base_options_dir}/html5/splash.png",
   "option_html5_usesplash": false,
   "option_html5_outputdebugtoconsole": true,
